@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -37,7 +37,7 @@ func CallGemini(apiKey, diff string) string {
 			{
 				Parts: []Part{
 					{Text: fmt.Sprintf(
-						"Generate a short, concise, one-line commit message for the following diff. " +
+						"Generate a short, concise, one-line commit message for the following diff. "+
 							"Keep it under 60 characters and include type like chore:, refactor:, feat:, fix:, docs:, test:\n%s", diff)},
 				},
 			},
@@ -48,7 +48,7 @@ func CallGemini(apiKey, diff string) string {
 
 	req, err := http.NewRequest("POST", API_URL+"?key="+apiKey, bytes.NewReader(jsonData))
 	if err != nil {
-		return ""
+		fmt.Println("Deu ruim no Gemini:", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 
@@ -59,7 +59,7 @@ func CallGemini(apiKey, diff string) string {
 	}
 	defer resp.Body.Close()
 
-	data, _ := ioutil.ReadAll(resp.Body)
+	data, _ := io.ReadAll(resp.Body)
 
 	var response Response
 	if err := json.Unmarshal(data, &response); err != nil {
