@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	// "io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,9 +21,7 @@ const (
 )
 
 var (
-	titleStyle    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("63"))
-	itemStyle     = lipgloss.NewStyle().PaddingLeft(2)
-	selectedStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("42"))
+	titleStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("63"))
 )
 
 type Config struct {

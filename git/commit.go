@@ -5,7 +5,6 @@ import (
 	"math/rand"
 	"os/exec"
 	"strings"
-	"time"
 
 	"luna/ai"
 	"luna/config"
@@ -14,7 +13,14 @@ import (
 var emojis = []string{"✨", "🛠️", "🐛", "🔥", "📝", "🚀", "🔧", "🎨", "🔒", "💄"}
 
 func GenerateCommitMessage(apiKey, diff, filename string, cfg config.Config, includeEmoji bool) string {
-	commitMsg := ai.CallGemini(apiKey, diff)
+	commitMsg, err := ai.CallGemini(apiKey, diff)
+
+	// Se der erro, avisamos no terminal e usamos o fallback
+	if err != nil {
+		fmt.Printf("Gemini error for %s: %v\n", filename, err)
+		commitMsg = ""
+	}
+
 	if commitMsg == "" {
 		commitMsg = "update " + filename
 	}
@@ -28,13 +34,12 @@ func GenerateCommitMessage(apiKey, diff, filename string, cfg config.Config, inc
 	}
 
 	if !hasPrefix && len(cfg.CommitPrefixes) > 0 {
-		rand.Seed(time.Now().UnixNano())
+		// Removido rand.Seed antigo
 		prefix := cfg.CommitPrefixes[rand.Intn(len(cfg.CommitPrefixes))]
 		commitMsg = prefix + " " + commitMsg
 	}
 
 	if includeEmoji {
-		rand.Seed(time.Now().UnixNano())
 		emoji := emojis[rand.Intn(len(emojis))]
 		commitMsg = fmt.Sprintf("%s %s", emoji, commitMsg)
 	}
@@ -50,7 +55,8 @@ func CommitFile(filename, commitMsg string) (string, error) {
 	cmd := exec.Command("git", "commit", "-m", commitMsg, "--", filename)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return string(out), fmt.Errorf("error committing %s: %v", filename, err)
+		// Aproveitando para corrigir aquele outro erro de mensagem oculta
+		return string(out), fmt.Errorf("git failed: %s (Err: %v)", string(out), err)
 	}
 	return string(out), nil
 }

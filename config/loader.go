@@ -3,7 +3,6 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -28,7 +27,7 @@ func LoadGlobalConfig() Config {
 		return cfg
 	}
 
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		fmt.Printf("Warning: reading global config: %v\n", err)
 		return cfg
@@ -47,7 +46,7 @@ func LoadProjectConfig() Config {
 		return GetDefaultConfig()
 	}
 
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return GetDefaultConfig()
 	}
@@ -65,11 +64,11 @@ func SaveGlobalConfig(cfg Config) error {
 		return err
 	}
 	data, _ := json.MarshalIndent(cfg, "", "  ")
-	return ioutil.WriteFile(path, data, 0644)
+	return os.WriteFile(path, data, 0644)
 }
 
 func SaveProjectConfig(cfg Config) error {
 	path := filepath.Join(".", PROJECT_CONFIG_FILE)
 	data, _ := json.MarshalIndent(cfg, "", "  ")
-	return ioutil.WriteFile(path, data, 0644)
+	return os.WriteFile(path, data, 0644)
 }

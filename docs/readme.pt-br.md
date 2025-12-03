@@ -21,24 +21,32 @@ Luna gera mensagens de commit concisas para seus arquivos staged usando a API Go
 
 ## Requisitos
 
-- Windows
-- Git instalado e disponível no PATH
+- macOS | Linux | Sistemas UNIX-like
+- Git instalado e disponível no `PATH`
 - Chave da API Google Gemini (`https://aistudio.google.com/app/apikey`)
 
 ## Instalação
 
-### Opção A — Usar binário pré-compilado (`bin/Luna.exe`)
+### Opção A — Usar binário pré-compilado (`bin/luna`)
 
-1. Copie `bin/Luna.exe` para um diretório, ex. `C:\Users\SeuUsuario\Luna`
-2. Adicione essa pasta ao PATH do sistema:
-   - Pressione `Win + R`, execute `sysdm.cpl`, abra "Variáveis de Ambiente"
-   - Edite a variável `Path` → "Novo" → cole o caminho da pasta
-   - Salve e reabra o terminal
-
-### Opção B — Compilar do código fonte (Go)
+1. Copie `bin/luna` para um diretório do sistema, por exemplo `/usr/local/bin`:
 
 ```bash
-go build -o ./bin/Luna.exe main.go
+sudo cp bin/luna /usr/local/bin/
+sudo chmod +x /usr/local/bin/luna
+```
+
+Ou adicione a pasta onde o binário está ao seu `PATH` (adicione a linha ao `~/.zshrc` ou `~/.bashrc`):
+
+```bash
+export PATH="$PATH:/caminho/para/sua/pasta"
+source ~/.zshrc
+```
+
+### Opção B — Compilar do código-fonte (Go)
+
+```bash
+go build -o ./bin/luna main.go
 ```
 
 Ou use o script helper:
